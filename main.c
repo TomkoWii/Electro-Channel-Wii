@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+// Načítanie vygenerovaných obrázkov
 #include "alza.h"
 #include "mall.h"
 #include "czc.h"
@@ -29,7 +30,7 @@ enum Shop { ALZA, MALL, CZC, DATART, NAY, AMAZON };
 enum ScreenState { SCREEN_LANGUAGE, SCREEN_MODE, SCREEN_SHOP, SCREEN_CATALOG, SCREEN_ORDER_CONFIRM };
 
 typedef struct {
-    char name[6][32];
+    char name[LANG_COUNT][30]; // Oprava polí pre 6 jazykov a 30 znakov
     GRRLIB_texImg *image;
     int base_price;
 } FakeProduct;
@@ -42,6 +43,9 @@ int main() {
     enum Language selectedLang = SLOVENCINA;
     enum Shop selectedShop = ALZA;
     int selectedProduct = 0;
+
+    // Načítanie zabudovaného fontu z GRRLIB
+    GRRLIB_texImg *tex_font = GRRLIB_CreateEmptyTexture(1, 1); 
 
     GRRLIB_texImg *tex_shops[SHOP_COUNT];
     tex_shops[ALZA]   = GRRLIB_LoadTexturePNG(alza);
@@ -67,6 +71,7 @@ int main() {
 
     FakeProduct products[PROD_COUNT];
 
+    // Nastavenie produktu Wii konzoly (Produkt č. 2)
     strcpy(products[2].name[SLOVENCINA], "Wii Konzola");
     strcpy(products[2].name[ANGLICTINA], "Wii Console");
     products[2].image = img_konzola;
@@ -141,10 +146,13 @@ int main() {
         GRRLIB_Render();
     }
 
-    for(int i = 0; i < SHOP_COUNT; i++) GRRLIB_FreeTexture(tex_shops[i]);
+    for(int i = 0; i < SHOP_COUNT; i++) {
+        if(tex_shops[i]) GRRLIB_FreeTexture(tex_shops[i]);
+    }
     GRRLIB_FreeTexture(img_chladnicka); GRRLIB_FreeTexture(img_tv);
     GRRLIB_FreeTexture(img_konzola);    GRRLIB_FreeTexture(img_hriankovac);
     GRRLIB_FreeTexture(img_pracka);     GRRLIB_FreeTexture(img_vysavac);
+    GRRLIB_FreeTexture(tex_font);
 
     GRRLIB_Exit();
     return 0;
