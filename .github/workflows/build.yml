@@ -1,0 +1,28 @@
+name: Build Electro Channel
+
+on: [push, pull_request]
+
+jobs:
+  wii_build:
+    runs-on: ubuntu-latest
+    container: devkitpro/devkitppc:latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install GRRLIB & PNG Dependencies
+        run: |
+          dkp-pacman -Syu --noconfirm wii-grrlib wii-libpng wii-libpngu
+
+      - name: Compile DOL
+        run: make
+
+      - name: Upload Homebrew Files
+        uses: actions/artifacts@v4
+        with:
+          name: Electro-Channel-Wii
+          path: |
+            boot.dol
+            meta.xml
+            
