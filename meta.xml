@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<app version="1.0">
+  <name>Electro Channel</name>
+  <coder>TomkoWii</coder>
+  <version>Beta</version>
+  <release_date>20261030</release_date>
+  <short_description>E-shop version ofFood Channelu</short_description>
+  <long_description>Homebrew app inspirated from Wii Food Channel on fake buying electro things.</long_description>
+</app>
