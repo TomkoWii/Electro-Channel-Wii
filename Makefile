@@ -4,24 +4,26 @@ endif
 
 include $(DEVKITPPC)/wii_rules
 
-TARGET := boot
+TARGET   := boot
 GRAPHICS := gfx
 PNGFILES := $(foreach dir,$(GRAPHICS),$(notdir $(wildcard $(dir)/*.png)))
 export GFXDEPS := $(PNGFILES:.png=.h)
 
-LIBS := -lgrrlib -lpngu -lpng -lz -lwiiuse -lbte -logc -lm
-CFLAGS := -g -O2 -Wall $(MACHDEP) -I. -I$(GRAPHICS)
+LIBS     := -lgrrlib -lpngu -lpng -lz -lwiiuse -lbte -logc -lm
+CFLAGS   := -g -O2 -Wall $(MACHDEP) -I. -I$(GRAPHICS)
 
-all: $(GFXDEPS) $(TARGET).down
+RAW2C    := /opt/devkitpro/tools/bin/raw2c
 
-%.h: $(GRAPHICS)/%.png 
-@echo "Converting $< to a C array..." 
-@raw2c $<
+all: $(GFXDEPS) $(TARGET).dol
 
-$(TARGET).down: $(TARGET).elf
+%.h: $(GRAPHICS)/%.png
+	@echo "Konvertujem $< do C pola..."
+	@$(RAW2C) $<
 
-$(TARGET).elf: main.c $(GFXDEPS) 
-$(CC) $(CFLAGS) main.c $(LDFLAGS) $(LIBS) -o $@
+$(TARGET).dol: $(TARGET).elf
 
-clean: 
-rm -f *.elf *.dol gfx/*.h
+$(TARGET).elf: main.c $(GFXDEPS)
+	$(CC) $(CFLAGS) main.c $(LDFLAGS) $(LIBS) -o $@
+
+clean:
+	rm -f *.elf *.dol gfx/*.h
